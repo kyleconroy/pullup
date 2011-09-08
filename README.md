@@ -1,6 +1,6 @@
-# Pullup - Pull Requests in git-svn
+# Pullup - Pull Requests for git-svn
 
-Since the current version of Github Enterprise lacks the merge button, I wrote a script that will pull down changes and apply pull reqeusts.
+I wrote a script that will pull down changes and apply pull reqeusts.
 
 The script assumes that your remote is named origin and that the main branch is master
 
@@ -18,4 +18,3 @@ which is the equivalent to doing
     git push origin master    
 
 Notice the rebase instead of the merge. That's important for git-svn 
-
