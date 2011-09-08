@@ -71,12 +71,16 @@ def main():
         execute = dry_run
     else:
         execute = attempt
+
+    # Generate a random string to make sure this branch is unique
+    uid = random.sample(string.letters + string.digits, 6)
     
     commands = [
         "git fetch origin",
-        "git checkout -b {0} origin/{0}".format(args.branch),
+        "git checkout -b pullup-{1}-{0} origin/{0}".format(args.branch, uid),
         "git rebase master",
         "git checkout master",
+        "git pull origin master",
         "git merge {}".format(args.branch),
         "git push origin master",
         ]
@@ -86,6 +90,11 @@ def main():
             execute(command)
         except Exception as e:
             print failed(str(e))
+            print 
+
+            if "merge" in command:
+                print "Merge conflicts found. git merge --abort to cleanup"
+
             exit(1)
     
     print passed("Successfully merged {} into master".format(args.branch))
