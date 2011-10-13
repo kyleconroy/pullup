@@ -1,4 +1,6 @@
 import argparse
+import random
+import string
 import subprocess
 import os
 
@@ -73,15 +75,16 @@ def main():
         execute = attempt
 
     # Generate a random string to make sure this branch is unique
-    uid = random.sample(string.letters + string.digits, 6)
+    uid = ''.join(random.sample(string.letters + string.digits, 6))
+    branch = "pullup-{1}-{0}".format(args.branch, uid)
     
     commands = [
         "git fetch origin",
-        "git checkout -b pullup-{1}-{0} origin/{0}".format(args.branch, uid),
-        "git rebase master",
+        "git checkout -b {} origin/{}".format(branch, args.branch),
+        "git merge master",
         "git checkout master",
         "git pull origin master",
-        "git merge {}".format(args.branch),
+        "git merge {}".format(branch),
         "git push origin master",
         ]
     
@@ -95,6 +98,8 @@ def main():
             if "merge" in command:
                 print "Merge conflicts found. git merge --abort to cleanup"
 
-            exit(1)
+            break
+
+    execute("git branch -d {}".format(branch))
     
     print passed("Successfully merged {} into master".format(args.branch))
